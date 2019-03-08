@@ -5,7 +5,7 @@ def getQ (max, min, n):
     return (max-min)/(math.pow(2,n)-1)
 
 
-#função que converte uma cadeia de binários em um número real
+#função que converte uma cadeia de binários em um número real (suporta strings e lists)
 def bin_dec(bin):
 	res = 0
 	for i in range(len(bin)-1,-1,-1):
