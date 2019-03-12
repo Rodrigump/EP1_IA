@@ -1,4 +1,5 @@
 import math
+import random
 
 #função que calcula o valor de q, dado max, min e número de bits
 def getQ (max, min, n):
@@ -16,3 +17,10 @@ def bin_dec(bin):
 		res = res + ((aux)*(2**((-i + len(bin) - 1))))
 		i=i-1
 	return res
+
+#Função para gerar o genoma (vetor binário) aleatório
+def random_genoma(size):
+    return [random.randrange(0, 2) for _ in range(0, size)]
+
+#Convertendo o genoma em valor real
+print(bin_dec(random_genoma(5)))
