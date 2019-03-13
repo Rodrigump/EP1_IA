@@ -1,6 +1,30 @@
 import math
 import random
 
+class Individuo:
+    
+    def __init__ (self, no_genes): #Construtor da classe
+        self.no_genes = no_genes #tamanho da cadeia
+        self.genotipo = random_genome(no_genes) #cadeia de bits
+            
+    def imprime (self): #imprime a cadeia de bits
+        for i in range(self.no_genes):
+            print(self.genotipo[i],end="",flush=True)
+        print()
+            
+class Populacao:
+    
+    def __init__ (self, no_genes, no_individuos): #Construtor da classe
+        self.no_genes = no_genes
+        self.no_individuos = no_individuos #numero de individuos da populacao
+        self.individuos = [] #arranjo de individuos
+        for i in range(no_individuos):
+            self.individuos.append(Individuo(no_genes))
+    
+    def imprime(self): #imprime o genotipo de todos os individuos da populacao
+        for i in range(self.no_individuos):
+            self.individuos[i].imprime()
+
 #função que calcula o valor de q, dado max, min e número de bits
 def getQ (max, min, n):
     return (max-min)/((2**n)-1)
