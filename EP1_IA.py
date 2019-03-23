@@ -1,7 +1,7 @@
 import math
 import random
 
-#valores hipoteticos (baseado no exemplo visto em aula)
+#parâmetros iniciais
 populacao = 10
 prob_crossover = 0.7
 prob_mutacao = 0.3
@@ -174,12 +174,12 @@ class Populacao:
 		self.individuos = novaPopulacao
 
 #sample code
-p = Populacao(10)
+p = Populacao(populacao)
 p.iniciaPopulacao()
 i = 1
 lim = 10000
 while(i<=lim):
 	p.GA()
 	i=i+1
-print(melhores[lim-1])
-print(media[lim-1])
+print('Melhor da última geração\t',melhores[lim-1])
+print('Média\t\t\t\t',media[lim-1])
