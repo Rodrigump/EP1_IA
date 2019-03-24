@@ -3,8 +3,9 @@ import random
 
 #parâmetros iniciais
 populacao = 10
+geracoes = 1000000
 prob_crossover = 0.7
-prob_mutacao = 0.3
+prob_mutacao = 0.01
 
 bits_x = 10
 min_x = -5
@@ -48,14 +49,6 @@ def bin_dec (cadeia, inicio, fim):
 def random_genome(size):
 	return [random.randrange(0, 2) for _ in range(0, size)]
 
-#Assumindo que genoma 1 e 2 são do mesmo tamanho
-def cross_over(first_genome,second_genome):
-	cross_over_point = random.randint(0,(len(first_genome)))
-	for pos in range(0,cross_over_point):
-		temp = first_genome[pos]
-		first_genome[pos] = second_genome[pos]
-		second_genome[pos] = temp
-
 class Individuo:
 
 	def __init__ (self): #Construtor da classe
@@ -66,12 +59,14 @@ class Individuo:
 		self.x_real = min_x + (getQ(max_x,min_x,bits_x) * bin_dec(self.genotipo, 0, bits_x-1))
 		self.y_real = min_y + (getQ(max_y,min_y,bits_y) * bin_dec(self.genotipo, bits_x, (bits_x + bits_y)-1))
 		self.fitness = f(self.x_real,self.y_real) #aplica o valor do fenotipo a funcao de fitness
+		self.fitnessInverso = 1 / (self.fitness + (10**-9))
 
 	def setCromossomoPronto (self, crom):
 		self.genotipo = crom
 		self.x_real = min_x + (getQ(max_x,min_x,bits_x) * bin_dec(self.genotipo, 0, bits_x-1))
 		self.y_real = min_y + (getQ(max_y,min_y,bits_y) * bin_dec(self.genotipo, bits_x, (bits_x + bits_y)-1))
 		self.fitness = f(self.x_real,self.y_real) #aplica o valor do fenotipo a funcao de fitness
+		self.fitnessInverso = 1 / (self.fitness + (10**-9))
 
 	def imprime (self): #imprime a cadeia de bits
 		for i in range(self.no_genes):
@@ -93,36 +88,32 @@ class Populacao:
 	def imprime(self): #imprime o genotipo de todos os individuos da populacao
 		for i in range(self.no_individuos):
 			self.individuos[i].imprime()
-
-	def ajustaFitness(self):
-		for i in range(self.no_individuos):
-			self.individuos[i].fitness = 1 / (self.individuos[i].fitness + (10**(-9)))
+		print()
 
 	def roleta (self): #retorna o indice do individuo escolhido na roleta
 		somaPesos = 0
 		for i in range (self.no_individuos):
-			somaPesos = somaPesos + self.individuos[i].fitness
+			somaPesos = somaPesos + self.individuos[i].fitnessInverso
 
 		valor = somaPesos * random.uniform(0,1)
 		for i in range(self.no_individuos):
-			valor = valor - self.individuos[i].fitness
+			valor = valor - self.individuos[i].fitnessInverso
 			if(valor < 0):
 				return i
 		return self.no_individuos - 1
 
 	def getMelhorIndividuo(self):
-		aux = -1
+		aux = -1000
 		index_melhor = 0
 		for i in range(self.no_individuos):
-			if(self.individuos[i].fitness > aux):
-				aux = self.individuos[i].fitness
+			if(self.individuos[i].fitnessInverso > aux):
+				aux = self.individuos[i].fitnessInverso
 				index_melhor = i
 		melhores.append(self.individuos[index_melhor].fitness)
 		return index_melhor
 
 	def GA (self):
-		self.ajustaFitness()
-		self.getMelhorIndividuo() #guarda o melhor indivíduo da geração atual no vetor estático 'melhores'
+		best = self.getMelhorIndividuo() #guarda o melhor indivíduo da geração atual no vetor estático 'melhores'
 		insere_media()
 		novaPopulacao = []
 
@@ -176,10 +167,8 @@ class Populacao:
 #sample code
 p = Populacao(populacao)
 p.iniciaPopulacao()
-i = 1
-lim = 10000
-while(i<=lim):
+i=0
+while(i<geracoes):
 	p.GA()
+	print(i,'\t',melhores[i],'\t',media[i],'\t',math.fabs(melhores[i]-media[i]))
 	i=i+1
-print('Melhor da última geração\t',melhores[lim-1])
-print('Média\t\t\t\t',media[lim-1])
