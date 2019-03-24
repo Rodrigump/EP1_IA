@@ -5,9 +5,9 @@ from Individuo import Individuo
 
 class Populacao:
 
-    def __init__(self,  no_individuos):  # Construtor da classes
-        self.prob_crossover = 0.7
-        self.prob_mutacao = 0.01
+    def __init__(self,  no_individuos,  prob_mutacao, prob_crossover):  # Construtor da classes
+        self.prob_crossover = prob_crossover
+        self.prob_mutacao =  prob_mutacao
         self.bits_x = 10
         self.min_x = -5
         self.max_x = 5
@@ -57,10 +57,7 @@ class Populacao:
             soma = soma + melhores[i]
             media.append(soma / len(melhores))
 
-    def GA(self, melhores, media, populacao):
-        # guarda o melhor indivíduo da geração atual no vetor estático 'melhores'
-        best = self.getMelhorIndividuo(melhores)
-        self.insere_media(melhores, media)
+    def GA(self, melhores, media, populacao):    
         novaPopulacao = []
 
         # crossover
