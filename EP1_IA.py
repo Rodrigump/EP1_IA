@@ -20,7 +20,7 @@ i = 0
 while(i < geracoes):
     # guarda o melhor indivíduo da geração atual no vetor estático 'melhores'
     best = p.getMelhorIndividuo(melhores)
-    p.insere_media(melhores, media)
+    p.insere_media(media)
     p.GA(melhores, media, populacao)
     print(i, '\t', melhores[i], '\t', media[i],
           '\t', math.fabs(melhores[i] - media[i]))
