@@ -74,13 +74,18 @@ class Populacao:
             index_pai2 = self.roleta()
             pai2 = self.individuos[index_pai2]
 
-            for i in range(len(mascara)):
-                if(mascara[i] == 0):
-                    filho1.insert(i, pai1.genotipo[i])
-                    filho2.insert(i, pai2.genotipo[i])
-                if(mascara[i] == 1):
-                    filho1.insert(i, pai2.genotipo[i])
-                    filho2.insert(i, pai1.genotipo[i])
+            cross = random.uniform(0,1)
+            if(cross < self.prob_crossover):
+                for i in range(len(mascara)):
+                    if(mascara[i] == 0):
+                        filho1.insert(i, pai1.genotipo[i])
+                        filho2.insert(i, pai2.genotipo[i])
+                    if(mascara[i] == 1):
+                        filho1.insert(i, pai2.genotipo[i])
+                        filho2.insert(i, pai1.genotipo[i])
+            else: #se nao houver crossover, clona
+                filho1 = pai1.genotipo
+                filho2 = pai2.genotipo
 
             # mutação
             for i in range(self.bits_x + self.bits_y):
