@@ -51,11 +51,15 @@ class Populacao:
         melhores.append(self.individuos[index_melhor].fitness)
         return index_melhor
 
-    def insere_media(self, melhores, media):
-        soma = 0
-        for i in range(len(melhores)):
-            soma = soma + melhores[i]
-            media.append(soma / len(melhores))
+    def getMedia(self):
+        somaFitness = 0
+        for i in range(self.no_individuos):
+            somaFitness = somaFitness + self.individuos[i].fitness
+        media = somaFitness / self.no_individuos
+        return media
+
+    def insere_media(self, media):
+        media.append(self.getMedia())
 
     def GA(self, melhores, media, populacao):    
         novaPopulacao = []
