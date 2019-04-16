@@ -14,6 +14,9 @@ class Individuo:
         self.max_y = max_y
         self.no_genes = self.bits_x + self.bits_y  # tamanho da cadeia
 
+        self.fitness = 0
+        self.fitnessInverso = 0
+
     # Função para gerar o genoma (vetor binário) aleatório
     @staticmethod
     def random_genome(size):
@@ -62,6 +65,9 @@ class Individuo:
         self.fitnessInverso = 1 / (self.fitness + (10**-9))
 
     def imprime(self):  # imprime a cadeia de bits
+        letras = ""
         for i in range(self.no_genes):
-            print(self.genotipo[i], end="", flush=True)
-            print('\t', self.fitness)
+            letras += str(self.genotipo[i])
+            # print(self.genotipo[i], end="", flush=True)
+        print(letras)
+        print('\t', self.fitness)

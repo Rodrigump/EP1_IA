@@ -22,18 +22,21 @@ class Grafico:
         fig = plt.figure(figsize=(15,6))
         
         print(self.nomeArq)
-        print('A')
+        print('Gerando gráfico...')
         with open(self.nomeArq,'r') as csvfile:
             plots = csv.reader(csvfile, delimiter=',')
+            # lê linha de cabecalho
+            rowHeader = next(plots)
+            # utiliza linhas para gerar grafico
             for row in plots:
                 x.append(int(row[0]))
                 y1.append(float(row[1]))
                 y2.append(float(row[2]))
         csvfile.close()
-        #plt.ylim((0,5))       
+        #plt.ylim((0,5))
 
-        plt.plot(x,y1, label='Melhores[1]', color = 'red')
-        plt.plot(x,y2, label='Media[2]', color = 'green', linestyle='dashed')
+        plt.plot(x,y1, label='Melhores[1]'  , color = 'red'   ,linewidth=0.2)
+        plt.plot(x,y2, label='Media[2]'     , color = 'green'    , linewidth=0.2)
 
         plt.xlabel('Gerações')
         plt.ylabel('Fitness')
@@ -41,4 +44,4 @@ class Grafico:
         plt.legend()
 
         plt.show()
-        print("Impressão de Grafico!")
+        print("Impressão de Grafico completa!")

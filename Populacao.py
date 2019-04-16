@@ -27,6 +27,7 @@ class Populacao:
     def imprime(self):  # imprime o genotipo de todos os individuos da populacao
         for i in range(self.no_individuos):
             self.individuos[i].imprime()
+        print("\t Media: " + str(self.getMedia()))
         print()
 
     def roleta(self):  # retorna o indice do individuo escolhido na roleta
@@ -40,6 +41,26 @@ class Populacao:
             if(valor < 0):
                 return i
         return self.no_individuos - 1
+
+    def torneio(self):  # retorna indice de individuo escolhido por torneio
+        arrInicio = []
+
+        # gera 10 indices aleatórios
+        while len(arrInicio) < 10:
+            indiceRandom = random.randint(0, self.no_individuos-1)
+            if indiceRandom not in arrInicio:
+                    arrInicio.append(indiceRandom)
+
+        # escolhe o que tiver maior fitness
+        valFit = 0
+        indice = 0
+        for i in range(len(arrInicio)):
+            indice = 1
+            # if self.individuos[arrInicio[i]].fitness > valFit :
+            #     valFit = self.individuos[arrInicio[i]].fitness
+            #     indice = arrInicio[i]
+
+        return indice
 
     def getMelhorIndividuo(self, melhores):
         aux = -1000
@@ -61,20 +82,51 @@ class Populacao:
     def insere_media(self, media):
         media.append(self.getMedia())
 
-    def GA(self, melhores, media, populacao):    
+    def GA(self, melhores, media, populacao, melhorIndice):
         novaPopulacao = []
 
-        # crossover
+        #ordena individuos por fitness
+        # self.individuos.sort(key=lambda x: x.fitnessInverso)
+
         while(len(novaPopulacao) < populacao):
             mascara = Individuo.random_genome(self.bits_x + self.bits_y)
             filho1 = []
             filho2 = []
+
+            # Seleção =====================================================================================
+
+            # seleção (roleta + roleta)
             index_pai1 = self.roleta()
             pai1 = self.individuos[index_pai1]
             index_pai2 = self.roleta()
             pai2 = self.individuos[index_pai2]
 
+            # # seleção (torneio + torneio)
+            # index_pai1 = self.torneio()
+            # pai1 = self.individuos[index_pai1]
+            # index_pai2 = self.torneio()
+            # pai2 = self.individuos[index_pai2]
+
+            # # seleção (random)
+            # index_pai1 = int(random.randrange(0, self.no_individuos))
+            # pai1 = self.individuos[index_pai1]
+            # index_pai2 = int(random.randrange(0, self.no_individuos))
+            # pai2 = self.individuos[index_pai2]
+
+            # # seleção (roleta + melhor)
+            # index_pai1 = self.roleta()
+            # pai1 = self.individuos[index_pai1]
+            # index_pai2 = melhorIndice
+            # pai2 = self.individuos[index_pai2]
+
+            # selecao por rank
+            # https://stackoverflow.com/questions/20290831/how-to-perform-rank-based-selection-in-a-genetic-algorithm
+            # --
+
+            #cross-over =========================================================================
             cross = random.uniform(0,1)
+
+            #Cross-over: Uniforme(mascara)
             if(cross < self.prob_crossover):
                 for i in range(len(mascara)):
                     if(mascara[i] == 0):
@@ -87,7 +139,29 @@ class Populacao:
                 filho1 = pai1.genotipo
                 filho2 = pai2.genotipo
 
-            # mutação
+            # #Cross-over: 1 ponto
+            # if(cross < self.prob_crossover):
+            #     corte = random.randint(0, 20)
+            #     for p in range(0, self.bits_y + self.bits_y):
+            #         if (p < 10):
+            #             if corte < 9: # mantem gene do pai
+            #                 filho1.insert(p, pai1.genotipo[p])
+            #                 filho2.insert(p, pai2.genotipo[p])
+            #             else:
+            #                 filho1.insert(p, pai2.genotipo[p])
+            #                 filho2.insert(p, pai1.genotipo[p])
+            #         else:
+            #             if p < corte:   # mantem gene do pai
+            #                 filho1.insert(p, pai2.genotipo[p])
+            #                 filho2.insert(p, pai1.genotipo[p])
+            #             else:
+            #                 filho1.insert(p, pai1.genotipo[p])
+            #                 filho2.insert(p, pai2.genotipo[p])
+            # else: #se nao houver crossover, clona
+            #     filho1 = pai1.genotipo
+            #     filho2 = pai2.genotipo
+
+            # mutação =================================================================================================
             for i in range(self.bits_x + self.bits_y):
                 mutacao = random.uniform(0, 1)
                 if(mutacao < self.prob_mutacao):
