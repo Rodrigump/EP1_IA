@@ -42,6 +42,21 @@ class Populacao:
                 return i
         return self.no_individuos - 1
 
+    def roletaTruncada(self):  # retorna o indice do individuo escolhido na roleta que elimina porcentagem dos piores
+        somaPesos = 0
+        percPop = int(self.no_individuos * 0.8)
+
+        self.individuos.sort(key=lambda x: x.fitnessInverso)
+        for i in range(percPop):
+            somaPesos = somaPesos + self.individuos[i].fitnessInverso
+
+        valor = somaPesos * random.uniform(0, 1)
+        for i in range(percPop):
+            valor = valor - self.individuos[i].fitnessInverso
+            if(valor < 0):
+                return i
+        return self.no_individuos - 1
+
     def torneio(self):  # retorna indice de individuo escolhido por torneio
         arrInicio = []
 
@@ -52,13 +67,14 @@ class Populacao:
                     arrInicio.append(indiceRandom)
 
         # escolhe o que tiver maior fitness
-        valFit = 0
+        valFit = 1
         indice = 0
         for i in range(len(arrInicio)):
-            indice = 1
+            # indice = 1
             # if self.individuos[arrInicio[i]].fitness > valFit :
-            #     valFit = self.individuos[arrInicio[i]].fitness
-            #     indice = arrInicio[i]
+            if self.individuos[arrInicio[i]].fitnessInverso < valFit:
+                valFit = self.individuos[arrInicio[i]].fitnessInverso
+                indice = arrInicio[i]
 
         return indice
 
@@ -66,28 +82,35 @@ class Populacao:
         aux = -1000
         index_melhor = 0
         for i in range(self.no_individuos):
-            if(self.individuos[i].fitnessInverso > aux):
+            if(self.individuos[i].fitnessInverso < aux):
                 aux = self.individuos[i].fitnessInverso
+            # if(self.individuos[i].fitness < aux):
+            #     aux = self.individuos[i].fitness
                 index_melhor = i
-        melhores.append(self.individuos[index_melhor].fitness)
+        melhores.append(self.individuos[index_melhor].fitnessInverso)
+        # melhores.append(self.individuos[index_melhor].fitness)
         return index_melhor
 
     def getMedia(self):
         somaFitness = 0
         for i in range(self.no_individuos):
-            somaFitness = somaFitness + self.individuos[i].fitness
+            # somaFitness = somaFitness + self.individuos[i].fitness
+            somaFitness = somaFitness + self.individuos[i].fitnessInverso
         media = somaFitness / self.no_individuos
         return media
 
     def insere_media(self, media):
         media.append(self.getMedia())
 
-    def GA(self, melhores, media, populacao, melhorIndice):
+    def GA(self, melhores, media, populacao):
         novaPopulacao = []
 
-        #ordena individuos por fitness
-        # self.individuos.sort(key=lambda x: x.fitnessInverso)
-
+        # Elitismo - adiciona x% dos melhores
+        elite = sorted(self.individuos, key=lambda x: x.fitnessInverso)
+        for i in range(int(self.no_individuos*0.1)):
+            novaPopulacao.append(elite[i])
+        for i in range(5):
+            print(str(novaPopulacao[i].fitness))
         while(len(novaPopulacao) < populacao):
             mascara = Individuo.random_genome(self.bits_x + self.bits_y)
             filho1 = []
@@ -100,6 +123,12 @@ class Populacao:
             pai1 = self.individuos[index_pai1]
             index_pai2 = self.roleta()
             pai2 = self.individuos[index_pai2]
+
+            # # seleção (roleta truncada)
+            # index_pai1 = self.roletaTruncada()
+            # pai1 = self.individuos[index_pai1]
+            # index_pai2 = self.roletaTruncada()
+            # pai2 = self.individuos[index_pai2]
 
             # # seleção (torneio + torneio)
             # index_pai1 = self.torneio()
@@ -114,6 +143,7 @@ class Populacao:
             # pai2 = self.individuos[index_pai2]
 
             # # seleção (roleta + melhor)
+
             # index_pai1 = self.roleta()
             # pai1 = self.individuos[index_pai1]
             # index_pai2 = melhorIndice
@@ -170,7 +200,6 @@ class Populacao:
                     else:
                         if(filho1[i] == 1):
                             filho1[i] = 0
-
             for i in range(self.bits_x + self.bits_y):
                 mutacao = random.uniform(0, 1)
                 if(mutacao < self.prob_mutacao):
@@ -179,11 +208,13 @@ class Populacao:
                     else:
                         if(filho2[i] == 1):
                             filho2[i] = 0
+
+            # monta cromossomos
             ind1 = Individuo(self.bits_x, self.min_x, self.max_x, self.bits_y, self.min_y, self.max_y)
             ind1.setCromossomoPronto(filho1)
             ind2 = Individuo(self.bits_x, self.min_x, self.max_x, self.bits_y, self.min_y, self.max_y)
             ind2.setCromossomoPronto(filho2)
-
+            # inclui novos individuos
             novaPopulacao.append(ind1)
             novaPopulacao.append(ind2)
 

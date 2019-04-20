@@ -8,8 +8,8 @@ from Grafico import Grafico
 
 # parâmetros iniciais
 populacao = 200
-geracoes = 1000
-prob_mutacao = 0.01
+geracoes = 100000
+prob_mutacao = 0.1
 prob_crossover = 0.7
 
 # para o gráfico no relatório
@@ -31,13 +31,15 @@ with open(nomeArq, 'w+') as f:
     f.write("Populacao: " + str(populacao) + " Geracoes: " + str(geracoes) + " Prob.Mutacao: " +
             str(prob_mutacao) + " Prob.Cross.: " + str(prob_crossover) + "\n")
     while (i < geracoes):
+        print("geracao: " + str(i))
         # guarda o melhor indivíduo da geração atual no vetor estático 'melhores'
         best = p.getMelhorIndividuo(melhores)
         p.insere_media(media)
-
-        p.GA(melhores, media, populacao, best)
         f.write(str(i) + ',' + "{:10.5f}".format(melhores[i]) + ',' + "{:10.5f}".format(media[i]) + ','
                 + "{:10.5f}".format(math.fabs(melhores[i] - media[i])) + '\n')
+        p.GA(melhores, media, populacao)
+        # f.write(str(i) + ',' + "{:10.5f}".format(melhores[i]) + ',' + "{:10.5f}".format(media[i]) + ','
+        #         + "{:10.5f}".format(math.fabs(melhores[i] - media[i])) + '\n')
         i = i + 1
 f.close()
 

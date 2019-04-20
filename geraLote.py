@@ -9,7 +9,7 @@ from Grafico import Grafico
 
 # parâmetros iniciais
 populacao = 200
-geracoes = 1000000
+geracoes = 1000
 prob_mutacao = 0.01
 prob_crossover = 0.7
 
@@ -27,6 +27,7 @@ for i in range(1, 6):
 
     #nome de arquivo
     nomeArq = 'arquivo' + str(i) + '.txt'
+    print("Gerando lote de arquivos...")
     print(datetime.datetime.now())
 
     # gera arquivo de texto com dados de melhores / media
@@ -40,7 +41,7 @@ for i in range(1, 6):
             best = p.getMelhorIndividuo(melhores)
             p.insere_media(media)
 
-            p.GA(melhores, media, populacao, best)
+            p.GA(melhores, media, populacao)
             f.write(str(j) + ',' + "{:10.5f}".format(melhores[j]) + ',' + "{:10.5f}".format(media[j]) + ','
                     + "{:10.5f}".format(math.fabs(melhores[j] - media[j])) + '\n')
             j = j + 1
