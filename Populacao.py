@@ -79,23 +79,23 @@ class Populacao:
         return indice
 
     def getMelhorIndividuo(self, melhores):
-        aux = -1000
+        aux = 1000
         index_melhor = 0
         for i in range(self.no_individuos):
-            if(self.individuos[i].fitnessInverso < aux):
-                aux = self.individuos[i].fitnessInverso
-            # if(self.individuos[i].fitness < aux):
-            #     aux = self.individuos[i].fitness
+            # if(self.individuos[i].fitnessInverso < aux):
+            #     aux = self.individuos[i].fitnessInverso
+            if(self.individuos[i].fitness < aux):
+                aux = self.individuos[i].fitness
                 index_melhor = i
-        melhores.append(self.individuos[index_melhor].fitnessInverso)
-        # melhores.append(self.individuos[index_melhor].fitness)
+        # melhores.append(self.individuos[index_melhor].fitnessInverso)
+        melhores.append(self.individuos[index_melhor].fitness)
         return index_melhor
 
     def getMedia(self):
         somaFitness = 0
         for i in range(self.no_individuos):
-            # somaFitness = somaFitness + self.individuos[i].fitness
-            somaFitness = somaFitness + self.individuos[i].fitnessInverso
+            somaFitness = somaFitness + self.individuos[i].fitness
+            # somaFitness = somaFitness + self.individuos[i].fitnessInverso
         media = somaFitness / self.no_individuos
         return media
 
@@ -106,11 +106,12 @@ class Populacao:
         novaPopulacao = []
 
         # Elitismo - adiciona x% dos melhores
-        elite = sorted(self.individuos, key=lambda x: x.fitnessInverso)
+        elite = sorted(self.individuos, key=lambda x: x.fitness)
         for i in range(int(self.no_individuos*0.1)):
             novaPopulacao.append(elite[i])
         for i in range(5):
             print(str(novaPopulacao[i].fitness))
+
         while(len(novaPopulacao) < populacao):
             mascara = Individuo.random_genome(self.bits_x + self.bits_y)
             filho1 = []
