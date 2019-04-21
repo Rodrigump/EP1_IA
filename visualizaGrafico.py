@@ -16,7 +16,7 @@ nomeArq = "arquivo1.txt"
 # graf.imprime()
 
 # grafico em lote
-for i in range(1,6):
+for i in range(0,5):
     #nome de arquivo
     nomeArq = 'arquivo' + str(i) + '.txt'
 

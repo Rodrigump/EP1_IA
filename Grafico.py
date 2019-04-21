@@ -43,5 +43,7 @@ class Grafico:
         plt.title('pc = ' + str(self.prob_crossover) + ', pm = ' + str(self.prob_mutacao) )
         plt.legend()
 
+        plt.ylim([0, 20])
+
         plt.show()
         print("Impressão de Grafico completa!")

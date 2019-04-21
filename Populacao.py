@@ -132,9 +132,17 @@ class Populacao:
 
         # Elitismo - adiciona x% dos melhores
         elite = sorted(self.individuos, key=lambda x: x.fitness)
-        for i in range(int(self.no_individuos*0.1)):
-            novaPopulacao.append(elite[i])
-        # for i in range(5):
+
+        # for i in range(int(self.no_individuos*0.05)):
+        #     novaPopulacao.append(elite[i])
+
+        e = 0
+        while (len(novaPopulacao) < int(self.no_individuos*0.05)):
+            if elite[e] not in novaPopulacao:
+                novaPopulacao.append(elite[e])
+            e += 1
+
+        # for i in range(int(self.no_individuos*0.05)):
         #     print(str(novaPopulacao[i].fitness))
 
         while(len(novaPopulacao) < populacao):
@@ -247,8 +255,12 @@ class Populacao:
             ind2 = Individuo(self.bits_x, self.min_x, self.max_x, self.bits_y, self.min_y, self.max_y)
             ind2.setCromossomoPronto(filho2)
             # inclui novos individuos
-            novaPopulacao.append(ind1)
-            novaPopulacao.append(ind2)
+            if ind1 not in novaPopulacao:
+                novaPopulacao.append(ind1)
+            if ind2 not in novaPopulacao:
+                novaPopulacao.append(ind2)
+            # novaPopulacao.append(ind1)
+            # novaPopulacao.append(ind2)
 
         self.individuos.clear()
         self.individuos = novaPopulacao
