@@ -102,6 +102,31 @@ class Populacao:
     def insere_media(self, media):
         media.append(self.getMedia())
 
+    def mutacao(self, genePai, fitPai,filhoIni):  # verifica se a mutação melhora o fitness, se não devolve o pai
+
+        # tentativas de mutação
+        for j in range(0,3):
+            filho = filhoIni
+            individuo = Individuo(self.bits_x, self.min_x, self.max_x, self.bits_y, self.min_y, self.max_y)
+            for i in range(self.bits_x + self.bits_y):
+                mutacao = random.uniform(0, 1)
+                if (mutacao < self.prob_mutacao):
+                    if (filho[i] == 0):
+                        filho[i] = 1
+                    else:
+                        if (filho[i] == 1):
+                            filho[i] = 0
+            individuo.setCromossomoPronto(filho)
+            if (individuo.fitness > fitPai):
+                break
+            else:   filho.clear()
+
+        # retorn gene do pai, caso a mutação não seja boa
+        if not len(filho) > 0:
+            return genePai
+
+        return filho
+
     def GA(self, melhores, media, populacao):
         novaPopulacao = []
 
@@ -109,8 +134,8 @@ class Populacao:
         elite = sorted(self.individuos, key=lambda x: x.fitness)
         for i in range(int(self.no_individuos*0.1)):
             novaPopulacao.append(elite[i])
-        for i in range(5):
-            print(str(novaPopulacao[i].fitness))
+        # for i in range(5):
+        #     print(str(novaPopulacao[i].fitness))
 
         while(len(novaPopulacao) < populacao):
             mascara = Individuo.random_genome(self.bits_x + self.bits_y)
@@ -209,6 +234,12 @@ class Populacao:
                     else:
                         if(filho2[i] == 1):
                             filho2[i] = 0
+
+            # teste para aceitar melhor fitness apenas
+            # mutacao = random.uniform(0, 1)
+            # if(mutacao < self.prob_mutacao):
+            #     filho1 = self.mutacao(pai1.genotipo, pai1.fitness,filho1)
+            #     filho2 = self.mutacao(pai2.genotipo, pai2.fitness,filho2)
 
             # monta cromossomos
             ind1 = Individuo(self.bits_x, self.min_x, self.max_x, self.bits_y, self.min_y, self.max_y)
