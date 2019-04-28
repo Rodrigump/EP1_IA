@@ -3,15 +3,15 @@
 import math
 import random
 import datetime
+import matplotlib.pyplot as plt
 
 from Populacao import Populacao
-from Grafico import Grafico
 
 # parâmetros iniciais
-populacao = 50
+populacao = 10
 geracoes = 1000000
 prob_mutacao = 0.01
-prob_crossover = 0.6
+prob_crossover = 0.7
 
 #loop de arquivos:
 for i in range(0, 5):
@@ -32,12 +32,14 @@ for i in range(0, 5):
 
     # gera arquivo de texto com dados de melhores / media
     j = 0
+    eixo_x = []
     melhorFitness = 100
     with open(nomeArq, 'w+') as f:
         # grava parametros no arquivo de texto
         f.write("Roleta+Roleta(original)   Populacao: " + str(populacao) + " Geracoes: " + str(geracoes) + " Prob.Mutacao: " +
                 str(prob_mutacao) + " Prob.Cross.: " + str(prob_crossover) + "\n")
         while (j < geracoes):
+            eixo_x.append(j)
             # guarda o melhor indivíduo da geração atual no vetor estático 'melhores'
             best = p.getMelhorIndividuo(melhores)
             if p.individuos[best].fitness < melhorFitness:
@@ -54,6 +56,8 @@ for i in range(0, 5):
                 break
 
             j = j + 1
+        plt.plot(eixo_x, melhores, media)
+        plt.show()
     f.close()
 
     print('Terminou de criar txt!\t' + nomeArq + " " + str(datetime.datetime.now()) )
