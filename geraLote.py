@@ -56,7 +56,9 @@ for i in range(0, 5):
                 break
 
             j = j + 1
-        plt.plot(eixo_x, melhores, media)
+        plt.plot(eixo_x, melhores, label='Melhor', color = 'red')
+        plt.plot(eixo_x, media, label='Média', color = 'blue')
+        plt.legend()
         plt.show()
     f.close()
 
